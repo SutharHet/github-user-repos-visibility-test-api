@@ -1,2 +1,2 @@
-# github-user-repos-visibility-test-api
-Program Which prints all repository of user and their availability of user
+# small-programs
+## repos-availability.py - prints in terminal user repositories and their availability
