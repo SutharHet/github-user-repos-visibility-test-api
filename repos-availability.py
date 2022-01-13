@@ -1,15 +1,15 @@
 import requests
 from pprint import pprint
 
-def display(repos_visbility):
-  for item in repos_visbility:
-    pprint(item[0] + ' : ' + item[1])
+def display(repos_data):
+  for item in repos_data:
+    pprint(item[0] + ' : ' + item[1] + ' : ' + item[2])
 
-def view_repos_visibility(user_repos):
-  repos_visibility = []
+def get_repos_data(user_repos):
+  repos_data = []
   for repos in user_repos:
-    repos_visibility.append([repos['name'],repos['visibility']])
-  display(repos_visibility)
+    repos_data.append([repos['name'],repos['visibility'],str(repos['stargazers_count']) + ' stars'])
+  display(repos_data)
 
 def list_repos(user_name):
   user_repos_req = requests.get('https://api.github.com/users/{}/repos'.format(user_name))
@@ -17,9 +17,13 @@ def list_repos(user_name):
   if len(user_repos_req.json()) == 0:
     print('User {} has no repositories.')
     quit()
-  for item in user_repos_req.json():
-    user_repos.append(item)
-  view_repos_visibility(user_repos)
+  get_repos_data(user_repos_req.json())
+
+def user_follow(user_dict):
+  following_count = user_dict['following']
+  follower_count = user_dict['followers']
+  print('following : ' + str(following_count))
+  print('followers : ' + str(follower_count))
 
 def get_user():
   while True:
@@ -32,6 +36,7 @@ def get_user():
       print('This UserName Does not exist.')
       continue
     else:
+      user_follow(user_req.json())
       list_repos(user_name)
       break
 
