@@ -1,6 +1,3 @@
-from msilib.schema import tables
-from pydoc import describe
-from sqlite3 import Cursor
 import mysql.connector
 
 db = mysql.connector.connect(
