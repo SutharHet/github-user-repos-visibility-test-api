@@ -1,3 +1,4 @@
+from turtle import update
 import mysql.connector
 
 db = mysql.connector.connect(
@@ -97,6 +98,15 @@ def insert_row(name, age, phno):
 	except:
 		print('\nError while inserting row')
 
+
+def update_column(update_query):
+	query = update_query
+	try:
+		cursor.execute(query)
+		db.commit()
+	except:
+		print('Error while updating')
+
 def describe_table(table_name):
 	query = "DESCRIBE {}".format(table_name)
 	try:
@@ -135,6 +145,12 @@ def delete_row(id):
 # mod_column_query = (
 # 	"ALTER TABLE test_table "
 # 	"MODIFY name varchar(30) NOT NULL"
+# )
+
+# update_column_query = (
+# 	"UPDATE test_table "
+# 	"SET name='Ray', phno=0 "
+# 	"WHERE id=3"
 # )
 
 select_db('testDB')
