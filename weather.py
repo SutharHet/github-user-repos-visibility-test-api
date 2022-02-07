@@ -15,20 +15,19 @@ def get_city_dict(dataset_id):
   while True:
     try:
       req = requests.get(f"https://www.ncdc.noaa.gov/cdo-web/api/v2/locations?datasetid={dataset_id}&locationcategoryid=CITY&limit={limit}&offset={offset}", headers=headers)
-      data.append(req.json()['results'])
+      data.extend(req.json()['results'])
       offset += 1000
     except:
       break
   
   id_dict ={}
-  for elemment in data:
-    for city in elemment:
-      name = city['name'].split(",")[0]
-      id_dict[name.lower()] = city['id']
+  for element in data:
+    name = element['name'].split(",")[0]
+    id_dict[name.lower()] = element['id']
 
   return id_dict
 
-def get_location(dataset_id):
+def location(dataset_id):
   city_dict = get_city_dict(dataset_id)
 
   print('Enter City')
@@ -42,13 +41,21 @@ def get_location(dataset_id):
   print(f'Either enterd city is wrong or is not awailable in {dataset_id}')
   quit()
 
+def data_limit():
+  limit = input("Enter numer of record(s) (1-1000): ")
+  if 0 < int(limit) <= 1000:
+    return limit
+  else:
+    print('Enter velid limit')
+    quit()
+
 def get_data(dataset_id,startdate,enddate):
   clear()
   print('Getting city Data...')
-  city_id = get_location(dataset_id)
+  city_id = location(dataset_id)
+  limit = data_limit()
   
-  print(dataset_id, city_id, startdate, enddate)
-  url = f'https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid={dataset_id}&locationid=CITY:{city_id}&startdate={startdate}&enddate={enddate}'
+  url = f'https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid={dataset_id}&locationid={city_id}&startdate={startdate}&enddate={enddate}&limit={limit}'
 
   req = requests.get(url, headers=headers)
 
