@@ -18,6 +18,8 @@ class weather:
     self.city_id = ''
     self.datatypes = {}
     self.weather_data = {}
+    self.sort_field = ''
+    self.sort_order = 'asc'
 
   def dataset(self, dataset_id):
     url = "https://www.ncdc.noaa.gov/cdo-web/api/v2/datasets"
@@ -61,7 +63,18 @@ class weather:
     except:
       print('Entered limit is not a number')
 
-  
+  def sort_in_order(self, order):
+    if order.lower() in ["asc","desc"]:
+      self.sort_order = order.lower()
+    else:
+      print("Invelid order of sorting valid parameters are 'asc' or 'desc'")
+
+  def sort_by(self, field):
+    if field.lower() in ["id", "name", "mindate", "maxdate","datacoverage"]:
+      self.sort_field = field.lower()
+    else:
+      print("Invelid field for sorting")
+
   def get_city_dict(self):
     limit = 1000
     offset = 1
@@ -115,16 +128,20 @@ class weather:
     if self.datasets['id'] and self.startdate and self.enddate:
       
       dataset_id = self.datasets['id']
-      url = f'https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid={dataset_id}&startdate={self.startdate}&enddate={self.enddate}&unit=metric'
+      url = f'https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid={dataset_id}&startdate={self.startdate}&enddate={self.enddate}&units=metric&limit={self.limit}'
       
-      if self.city_id:
-        url += f'&locationid={self.city_id}'
       if self.datatypes and self.datatypes['id']:
           datatype_id = self.datatypes['id']
           url += f'&datatypeid={datatype_id}'
-      if self.limit:
-        url += f'&limit={self.limit}'
-
+      if self.city_id:
+        url += f'&locationid={self.city_id}'
+      if self.sort_field:
+        url += f'&sortfield={self.sort_field}'
+      if self.sort_order:
+        url += f'&sortorder={self.sort_order}'
+      # if self.station_id:
+      #   url += f'&locationid={self.station_id}'
+      
       try:
         req = requests.get(url, headers=headers)
         self.weather_data = req.json()['results']
@@ -141,3 +158,19 @@ class weather:
         print('Type of data : ' + record['datatype'])
         print('Value : ' + str(record['value']))
         print()
+
+
+
+weather_obj = weather()
+
+weather_obj.dataset('GHCND')
+weather_obj.dates('2022-1-23','2022-1-31')
+weather_obj.record_limit(5)
+# weather_obj.datatype('TAVG')
+# weather_obj.location('delhi')
+# weather_obj.sort_by('value')
+weather_obj.sort_in_order('desc')
+
+weather_obj.get_data()
+
+weather_obj.display()
