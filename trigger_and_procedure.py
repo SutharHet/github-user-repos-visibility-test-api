@@ -1,4 +1,12 @@
 # procedure
+procedure_query = (
+  "CREATE PROCEDURE get_info () "
+  "BEGIN "
+  "SELECT * FROM test_table WHERE id = 3; "
+  "SELECT * FROM test_table WHERE name = het; "
+  "END"
+)
+
 in_procedure_query = (
   "CREATE PROCEDURE get_info (IN n1 int) "
   "BEGIN "
