@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ajax Document</title>
+  <script src="../jquery-3.6.0.js"></script>
+  <script>
+    $(document).ready(() => {
+      let getData = () => {
+        let obj = {
+          type: "GET",
+          url: "https://jsonplaceholder.typicode.com/todos",
+          dataType: "json",
+          timeout: 2000,
+          success : (data) => {
+            $.each(data, (index, item) => {
+              $("#data").append("<li>ID: "+ String(item.id)+" | Title: "+ item.title+"</li>")
+            })
+          },
+          error: () => {
+            alert("Error loading data")
+          },
+          complete: () => {
+            console.log("GET request complete")
+          }
+        }
+        $.ajax(obj)
+      }
+
+      let postData = () => {
+        let obj = {
+          type: "POST",
+          url: "https://jsonplaceholder.typicode.com/todos",
+          dataType: "json",
+          data: {str:"str"},
+          timeout: 2000,
+          success : () => {
+            console.log("Uploaded")
+          },
+          error: () => {
+            alert("Error uploading data")
+          },
+          complete: () => {
+            console.log("POST request complete")
+          }
+        }
+        $.ajax(obj)
+      }
+
+      let deleteData = () => {
+        let obj = {
+          type: "DELETE",
+          url: "https://jsonplaceholder.typicode.com/posts/1",
+          dataType: "json",
+          timeout: 2000,
+          success : () => {
+            console.log("Deleted")
+          },
+          error: () => {
+            alert("Error deleting data")
+          },
+          complete: () => {
+            console.log("DELETE request complete")
+          }
+        }
+        $.ajax(obj)
+      }
+
+      let putData = () => {
+        let obj = {
+          type: "PUT",
+          url: "https://jsonplaceholder.typicode.com/todos/1",
+          data: {title: "one"},
+          dataType: "json",
+          timeout: 2000,
+          success : () => {
+            console.log("Edited")
+          },
+          error: () => {
+            alert("Error Updating data")
+          },
+          complete: () => {
+            console.log("PUT request complete")
+          }
+        }
+        $.ajax(obj)
+      }
+
+      $("#get-data").on("click", getData)
+      $("#post-data").on("click", postData)
+      $("#delete-data").on("click", deleteData)
+      $("#put-data").on("click", putData)
+    })
+  </script>
+</head>
+<body>
+  <div class="header"></div>
+  <div class="btns">
+    <button id="get-data">GET DATA</button>
+    <button id="post-data">POST DATA</button>
+    <button id="delete-data">DELETE DATA</button>
+    <button id="put-data">PUT DATA</button>
+    <br />
+    <ul id="data"></ul>
+  </div>
+</body>
+</html>
