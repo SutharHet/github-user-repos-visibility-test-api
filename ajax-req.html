@@ -14,7 +14,7 @@
           timeout: 2000,
           success : (data) => {
             $.each(data, (index, item) => {
-              $("#data").append("<li>ID: "+ String(item.id)+" | Title: "+ item.title+"</li>")
+              $("#data").append("<li>ID: "+ String(item.id)+" | Title: "+ item.title+" | <button id= \"edt"+String(item.id)+"\">Edit</button>  <button id= \"del"+String(item.id)+"\">Delete</button></li>")
             })
           },
           error: () => {
@@ -22,86 +22,61 @@
           },
           complete: () => {
             console.log("GET request complete")
-          }
+          },
+          async: false
         }
         $.ajax(obj)
       }
 
-      let postData = () => {
-        let obj = {
-          type: "POST",
-          url: "https://jsonplaceholder.typicode.com/todos",
-          dataType: "json",
-          data: {str:"str"},
-          timeout: 2000,
-          success : () => {
-            console.log("Uploaded")
-          },
-          error: () => {
-            alert("Error uploading data")
-          },
-          complete: () => {
-            console.log("POST request complete")
-          }
-        }
-        $.ajax(obj)
-      }
-
-      let deleteData = () => {
+      let deleteData = (id) => {
         let obj = {
           type: "DELETE",
-          url: "https://jsonplaceholder.typicode.com/posts/1",
+          url: "https://jsonplaceholder.typicode.com/posts/"+id,
           dataType: "json",
           timeout: 2000,
           success : () => {
-            console.log("Deleted")
+            console.log("Deleted id : "+id)
           },
           error: () => {
-            alert("Error deleting data")
-          },
-          complete: () => {
-            console.log("DELETE request complete")
+            alert("Error deleting id : "+id)
           }
         }
         $.ajax(obj)
       }
 
-      let putData = () => {
+      let putData = (id) => {
         let obj = {
           type: "PUT",
-          url: "https://jsonplaceholder.typicode.com/todos/1",
-          data: {title: "one"},
+          url: "https://jsonplaceholder.typicode.com/todos/"+id,
+          data: {title: "updated Title"},
           dataType: "json",
           timeout: 2000,
           success : () => {
-            console.log("Edited")
+            console.log("Edited id : "+id)
           },
           error: () => {
-            alert("Error Updating data")
-          },
-          complete: () => {
-            console.log("PUT request complete")
+            alert("Error Updating id : "+id)
           }
         }
         $.ajax(obj)
       }
 
-      $("#get-data").on("click", getData)
-      $("#post-data").on("click", postData)
-      $("#delete-data").on("click", deleteData)
-      $("#put-data").on("click", putData)
+      getData()
+
+      $("button").on("click", (event)=>{
+        let btnId = event.target.id
+        id = btnId.charAt(3)
+
+        if(btnId.charAt(0) == 'e'){
+          putData(id)
+        }else if (btnId.charAt(0) == 'd'){
+          deleteData(id)
+        }
+      })
     })
   </script>
 </head>
 <body>
-  <div class="header"></div>
-  <div class="btns">
-    <button id="get-data">GET DATA</button>
-    <button id="post-data">POST DATA</button>
-    <button id="delete-data">DELETE DATA</button>
-    <button id="put-data">PUT DATA</button>
-    <br />
-    <ul id="data"></ul>
-  </div>
+  <ul id="data"></ul>
 </body>
 </html>
